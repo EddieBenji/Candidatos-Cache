@@ -34,10 +34,10 @@ public class ControladorCache {
      * @param id es el identificador del objeto que se introducirá a la caché.
      * @param candidato es el objeto que se introducirá a la caché.
      */
-    public void put(String id, Object candidato) {
-
+    public void put(int id, Object candidato) {
+        String ID = String.valueOf(id);
         try {
-            jcsCache.put(id, candidato);
+            jcsCache.put(ID, candidato);
             
         } catch (CacheException ex) {
             System.out.println("**ERROR!**");
@@ -54,8 +54,8 @@ public class ControladorCache {
      * obtener de la caché.
      * @return el objeto del candidato.
      */
-    public Object get(String claveCandidato) {
-        
-        return  jcsCache.get(claveCandidato);
+    public Object get(int claveCandidato) {
+        String id = String.valueOf(claveCandidato);
+        return  jcsCache.get(id);
     }
 }
