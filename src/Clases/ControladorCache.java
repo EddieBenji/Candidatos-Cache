@@ -54,7 +54,7 @@ public class ControladorCache {
      * obtener de la caché.
      * @return el objeto del candidato.
      */
-    public Cacheable get(int claveObjeto) {
+    public Object get(int claveObjeto) {
         String id = String.valueOf(claveObjeto);
         return  (Cacheable) jcsCache.get(id);
     }

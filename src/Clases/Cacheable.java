@@ -9,7 +9,7 @@ package Clases;
  *
  * @author Lalo
  */
-public interface Cacheable {
+public interface Cacheable   {
 
     public int getID();
 }
