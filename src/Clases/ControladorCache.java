@@ -1,4 +1,4 @@
-package ControladorCache;
+package Clases;
 
 import org.apache.jcs.JCS;
 import org.apache.jcs.access.exception.CacheException;
