@@ -18,14 +18,12 @@ public class ControladorCache {
      * Este método es el encargado de cargar el archivo de configuración de la
      * caché. Si se desea manipular la caché, será este método que se deba
      * llamar en primer lugar.
+     * @throws org.apache.jcs.access.exception.CacheException
      */
-    public void configLoad() {
-        try {
+    public void configLoad() throws CacheException {
+
             // Se carga el cache usando el archivo de configuracion
             jcsCache = JCS.getInstance("mvcDetailsCache");
-        } catch (CacheException ex) {
-            ex.printStackTrace();
-        }
     }
 
 
@@ -33,17 +31,11 @@ public class ControladorCache {
      *Método encargado de agregar la información del candidato a la caché.
      * @param id es el identificador del objeto que se introducirá a la caché.
      * @param objeto es el objeto que se introducirá a la caché.
+     * @throws org.apache.jcs.access.exception.CacheException
      */
-    public void put(int id, Cacheable objeto) {
+    public void put(int id, Cacheable objeto) throws CacheException {
         String ID = String.valueOf(id);
-        try {
             jcsCache.put(ID, objeto);
-            
-        } catch (CacheException ex) {
-            System.out.println("**ERROR!**");
-            ex.printStackTrace();
-        }
-
     }
 
     /**
@@ -54,21 +46,17 @@ public class ControladorCache {
      * obtener de la caché.
      * @return el objeto del candidato.
      */
-    public Object get(int claveObjeto) {
+    public Object get(int claveObjeto) throws CacheException {
         String id = String.valueOf(claveObjeto);
         return  (Cacheable) jcsCache.get(id);
     }
     
     /**
      * Método encargado de limpiar la caché. (la deja sin datos completamente)
+     * @throws org.apache.jcs.access.exception.CacheException
      */
-    public void limpiarCache() {
-        try {
-            jcsCache.clear();
-        } catch (CacheException ex) {
-            System.out.println("**ERROR!**");
-            ex.printStackTrace();
-        }
+    public void limpiarCache() throws CacheException {
+            jcsCache.clear();        
     }
     
     
