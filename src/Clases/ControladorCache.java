@@ -10,7 +10,6 @@ import org.apache.jcs.access.exception.CacheException;
 public class ControladorCache {
 
     private JCS jcsCache;
-
     private static ControladorCache instanciaCache = new ControladorCache();
 
     private ControladorCache() {}
@@ -30,24 +29,31 @@ public class ControladorCache {
      * caché. Si se desea manipular la caché, será este método que se deba
      * llamar en primer lugar.
      *
-     * @throws org.apache.jcs.access.exception.CacheException
+     * @throws Clases.ExcepcionArchivoConfiguracion
      */
-    public void configLoad() throws CacheException {
+    public void configLoad() throws ExcepcionArchivoConfiguracion {
 
-        // Se carga el cache usando el archivo de configuracion
-        jcsCache = JCS.getInstance("mvcDetailsCache");
+        try {
+            // Se carga el cache usando el archivo de configuracion
+            jcsCache = JCS.getInstance("mvcDetailsCache");
+        } catch (CacheException ex) {
+            throw new ExcepcionArchivoConfiguracion();
+        }
     }
 
     /**
      * Método encargado de agregar la información del candidato a la caché.
      *
-     * @param id es el identificador del objeto que se introducirá a la caché.
-     * @param objeto es el objeto que se introducirá a la caché.
-     * @throws org.apache.jcs.access.exception.CacheException
+     * @param objeto es el objeto que se introducirá a la caché. Deberá ser
+     * específicamente de tipo cacheable.
+     * @throws Clases.ExcepcionObjetoDuplicado
      */
-    public void put(int id, Cacheable objeto) throws CacheException {
-        String ID = String.valueOf(id);
-        jcsCache.put(ID, objeto);
+    public void put(Cacheable objeto) throws ExcepcionObjetoDuplicado {
+        try {
+            jcsCache.put(objeto.getID(), objeto);
+        } catch (CacheException ex) {
+            throw new ExcepcionObjetoDuplicado();
+        }
     }
 
     /**
@@ -57,10 +63,10 @@ public class ControladorCache {
      * @param claveObjeto, que es el identificador del candidato que se desea
      * obtener de la caché.
      * @return el objeto del candidato.
+     * @throws Clases.ExcepcionObjetoDesconocido
      */
-    public Object get(int claveObjeto) throws CacheException {
-        String id = String.valueOf(claveObjeto);
-        return (Cacheable) jcsCache.get(id);
+    public Object get(int claveObjeto) throws ExcepcionObjetoDesconocido {
+        return (Cacheable) jcsCache.get(claveObjeto);
     }
 
     /**
@@ -72,4 +78,17 @@ public class ControladorCache {
         jcsCache.clear();
     }
 
+     /**
+     * Método que elimina el objeto que se desea de la cache, a partir del id
+     * que se le pase como parámetro.
+     * @param id, identificador del objeto a eliminar.
+     * @throws Clases.ExcepcionObjetoDesconocido 
+     */
+    public void delete(int id)throws ExcepcionObjetoDesconocido{
+        try {
+            jcsCache.remove(id);
+        } catch (CacheException ex) {
+            throw new ExcepcionObjetoDesconocido();
+        }
+    }
 }
