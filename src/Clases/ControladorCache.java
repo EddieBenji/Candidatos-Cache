@@ -1,5 +1,6 @@
 package Clases;
 
+import java.util.ArrayList;
 import org.apache.jcs.JCS;
 import org.apache.jcs.access.exception.CacheException;
 
@@ -12,7 +13,8 @@ public class ControladorCache {
     private JCS jcsCache;
     private static ControladorCache instanciaCache = new ControladorCache();
 
-    private ControladorCache() {}
+    private ControladorCache() {
+    }
 
     /**
      * Implementa el patrón de diseño singleton, devuelve una instancia única
@@ -65,7 +67,7 @@ public class ControladorCache {
      * @return el objeto del candidato.
      * @throws Clases.ExcepcionObjetoDesconocido
      */
-    public Object get(int claveObjeto) throws ExcepcionObjetoDesconocido {
+    public Cacheable get(int claveObjeto) throws ExcepcionObjetoDesconocido {
         return (Cacheable) jcsCache.get(claveObjeto);
     }
 
@@ -78,17 +80,36 @@ public class ControladorCache {
         jcsCache.clear();
     }
 
-     /**
+    /**
      * Método que elimina el objeto que se desea de la cache, a partir del id
      * que se le pase como parámetro.
+     *
      * @param id, identificador del objeto a eliminar.
-     * @throws Clases.ExcepcionObjetoDesconocido 
+     * @throws Clases.ExcepcionObjetoDesconocido
      */
-    public void delete(int id)throws ExcepcionObjetoDesconocido{
+    public void delete(int id) throws ExcepcionObjetoDesconocido {
         try {
             jcsCache.remove(id);
         } catch (CacheException ex) {
             throw new ExcepcionObjetoDesconocido();
         }
+    }
+
+    /**
+     * Lo que hace este método es recorrer la caché del índice inicio hasta el
+     * índice fin; convirtiendo los objetos encontrados a tipo Cacheable.
+     *
+     * @param inicio, es el índice desde donde empezará a recorrer la caché.
+     * @param fin, es el índice donde terminará de recorrer la caché.
+     * @return una lista de los objetos en esa porción de la caché.
+     * @throws ExcepcionObjetoDesconocido
+     */
+    public ArrayList<Cacheable> toArray(int inicio, int fin) throws ExcepcionObjetoDesconocido {
+
+        ArrayList<Cacheable> arreglo = new ArrayList<>();
+        for (int i = inicio; i <= fin; i++) 
+            arreglo.add(get(i));
+        
+        return arreglo;
     }
 }
